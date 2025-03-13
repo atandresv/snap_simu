@@ -104,6 +104,6 @@ class Plc:
         """
         Closes the PLC connection.
         """
-        #self.plc.disconnect()
-        self.plc.destroy()
+        self.plc.disconnect()
+        #self.plc.destroy()
         logging.info("Disconnected from PLC")
