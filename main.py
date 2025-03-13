@@ -2,8 +2,8 @@
 from siemens_comm import Plc
 import time
 
-def main():
-    plc = Plc()  # Assuming you need to initialize the Plc object
+def main() -> None:
+    plc: Plc = Plc()  # Assuming you need to initialize the Plc object
 
     try:
         while True:
