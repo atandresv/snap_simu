@@ -1,5 +1,6 @@
 
-
+from siemens_comm import Plc
+import time
 
 def main():
     print("Hello, world!")
