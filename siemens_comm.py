@@ -12,12 +12,37 @@ class Plc:
         :param slot: Slot number
         """
         self.plc = snap7.client.Client()
+        self.ip = ip
+        self.rack = rack
+        self.slot = slot
+        
+        if not self._validate_ip(ip):
+            logging.error(f"Invalid IP address: {ip}")
+            return
+            
         try:
-            self.plc.connect(ip, rack, slot)
-            logging.info("Connected to PLC")
-        except snap7.snap7exceptions.Snap7Exception as e:
+        plc.connect(ip, rack, slot)
+        if plc.get_connected():
+            logging.info(f"Connected to PLC at IP {ip}, rack {rack}, slot {slot}")
+        else:
+            logging.error("Failed to connect to PLC")
+        except Exception as e:
             logging.error(f"Error connecting to PLC: {e}")
+        
+     @staticmethod
+    def _validate_ip(ip):
+        """
+        Validates the IP address format.
 
+        :param ip: IP address to validate
+        :return: True if valid, False otherwise
+        """
+        import re
+        pattern = re.compile(r"^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$")
+        if pattern.match(ip):
+            return all(0 <= int(num) <= 255 for num in ip.split('.'))
+        return False
+        
     def write_input(self, plc_byte, plc_bit, new_value):
         """
         Writes a boolean value to the PLC input.
