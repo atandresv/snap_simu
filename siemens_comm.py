@@ -29,7 +29,7 @@ class Plc:
         except Exception as e:
             logging.error(f"Error connecting to PLC: {e}")
         
-     @staticmethod
+    @staticmethod
     def _validate_ip(ip):
         """
         Validates the IP address format.
@@ -56,7 +56,7 @@ class Plc:
             snap7.util.set_bool(data, 0, plc_bit, new_value)
             self.plc.write_area(snap7.types.Areas.PE, 0, plc_byte, data)
             logging.info(f"Input written: byte={plc_byte}, bit={plc_bit}, value={new_value}")
-        except snap7.snap7exceptions.Snap7Exception as e:
+        except Exception as e:
             logging.error(f"Error writing input to PLC: {e}")
 
     def read_output(self, plc_byte, plc_bit):
@@ -72,7 +72,7 @@ class Plc:
             value = snap7.util.get_bool(data, 0, plc_bit)
             logging.info(f"Output read: byte={plc_byte}, bit={plc_bit}, value={value}")
             return value
-        except snap7.snap7exceptions.Snap7Exception as e:
+        except Exception as e:
             logging.error(f"Error reading output from PLC: {e}")
             return None
 
@@ -98,7 +98,7 @@ class Plc:
         
             self.plc.write_area(snap7.types.Area.PE, 0, start_byte, data)
             logging.info(f"Analog input written: byte={start_byte}, size={size}, value={value}")
-        except snap7.snap7exceptions.Snap7Exception as e:
+        except Exception as e:
             logging.error(f"Error writing analog input to PLC: {e}")
 
     def read_analog_output(self, start_byte, size=2):
@@ -121,7 +121,7 @@ class Plc:
 
             logging.info(f"Analog output read: byte={start_byte}, size={size} ,value={value}")
             return value
-        except snap7.snap7exceptions.Snap7Exception as e:
+        except Exception as e:
             logging.error(f"Error reading analog output from PLC: {e}")
             return None
 
