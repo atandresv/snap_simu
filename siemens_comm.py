@@ -1,6 +1,6 @@
-
 import snap7
 import logging
+import re
 
 class Plc:
     def __init__(self, ip='192.168.1.15', rack=0, slot=1):
@@ -21,11 +21,11 @@ class Plc:
             return
             
         try:
-        plc.connect(ip, rack, slot)
-        if plc.get_connected():
-            logging.info(f"Connected to PLC at IP {ip}, rack {rack}, slot {slot}")
-        else:
-            logging.error("Failed to connect to PLC")
+            self.plc.connect(ip, rack, slot)
+            if self.plc.get_connected():
+                logging.info(f"Connected to PLC at IP {ip}, rack {rack}, slot {slot}")
+            else:
+                logging.error("Failed to connect to PLC")
         except Exception as e:
             logging.error(f"Error connecting to PLC: {e}")
         
@@ -37,8 +37,7 @@ class Plc:
         :param ip: IP address to validate
         :return: True if valid, False otherwise
         """
-        import re
-        pattern = re.compile(r"^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$")
+        pattern = re.compile(r"^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$")
         if pattern.match(ip):
             return all(0 <= int(num) <= 255 for num in ip.split('.'))
         return False
@@ -96,21 +95,21 @@ class Plc:
                 logging.error(f"Invalid size: {size}. Size must be 2 or 4 bytes.")
                 return
         
-            self.plc.write_area(snap7.types.Area.PE, 0, start_byte, data)
+            self.plc.write_area(snap7.types.Areas.PE, 0, start_byte, data)
             logging.info(f"Analog input written: byte={start_byte}, size={size}, value={value}")
         except Exception as e:
             logging.error(f"Error writing analog input to PLC: {e}")
 
     def read_analog_output(self, start_byte, size=2):
         """
-        Reads a analog value from the PLC output.
+        Reads an analog value from the PLC output.
 
         :param start_byte: Byte address
         :param size: read area size in bytes (2 or 4)
         :return: analog value read
         """
         try:
-            data = self.plc.read_area(snap7.types.Area.PA, 0, start_byte, size)
+            data = self.plc.read_area(snap7.types.Areas.PA, 0, start_byte, size)
             if size == 2:
                 value = snap7.util.get_int(data, 0)
             elif size == 4:
@@ -119,7 +118,7 @@ class Plc:
                 logging.error(f"Invalid size: {size}. Size must be 2 or 4 bytes.")
                 return None
 
-            logging.info(f"Analog output read: byte={start_byte}, size={size} ,value={value}")
+            logging.info(f"Analog output read: byte={start_byte}, size={size}, value={value}")
             return value
         except Exception as e:
             logging.error(f"Error reading analog output from PLC: {e}")
@@ -129,6 +128,8 @@ class Plc:
         """
         Closes the PLC connection.
         """
-        self.plc.disconnect()
-        #self.plc.destroy()
-        logging.info("Disconnected from PLC")
+        try:
+            self.plc.disconnect()
+            logging.info("Disconnected from PLC")
+        except Exception as e:
+            logging.error(f"Error disconnecting from PLC: {e}")
