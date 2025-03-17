@@ -3,7 +3,7 @@ import logging
 import re
 
 class Plc:
-    def __init__(self, ip='192.168.1.15', rack=0, slot=1):
+    def __init__(self, ip='192.168.0.11', rack=0, slot=1):
         """
         Initializes the PLC connection.
 
