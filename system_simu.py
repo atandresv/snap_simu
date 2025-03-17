@@ -1,6 +1,6 @@
 import time
 
-class contactor:
+class Contactor:
   def __init__(self):
     pass
     
