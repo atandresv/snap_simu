@@ -1,6 +1,7 @@
 from os import read
 import logging_config
 from siemens_comm import Plc
+from system_simu import Contactor
 import time
 
 def main() -> None:
