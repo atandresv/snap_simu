@@ -4,6 +4,9 @@ from siemens_comm import Plc
 from system_simu import Contactor
 import time
 
+# Configure logging
+setup_logging()
+
 def main() -> None:
     plc: Plc = Plc()  # Assuming you need to initialize the Plc object
 
